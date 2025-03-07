@@ -1,0 +1,75 @@
+[
+    {
+      "id": 1,
+      "name": "Wireless Headphones",
+      "price": 59.99,
+      "image": "assets/product1.jpeg",
+      "description": "Noise-canceling wireless headphones with 20-hour battery life.",
+      "category": "electronics",
+      "link": "products/product1.html"
+    },
+    {
+      "id": 2,
+      "name": "Smartphone Stand",
+      "price": 15.99,
+      "image": "assets/product2.jpeg",
+      "description": "Adjustable smartphone stand for desks and nightstands.",
+      "category": "accessories",
+      "link": "products/product2.html"
+    },
+    {
+      "id": 3,
+      "name": "Gaming Mouse",
+      "price": 34.99,
+      "image": "assets/product3.jpeg",
+      "description": "Ergonomic gaming mouse with customizable RGB lighting.",
+      "category": "electronics",
+      "link": "products/product3.html"
+    },
+    {
+      "id": 4,
+      "name": "Running Shoes",
+      "price": 79.99,
+      "image": "assets/product4.jpeg",
+      "description": "Lightweight and breathable running shoes for all-day comfort.",
+      "category": "fashion",
+      "link": "products/product4.html"
+    },
+    {
+      "id": 5,
+      "name": "Bluetooth Speaker",
+      "price": 45.99,
+      "image": "assets/product5.jpeg",
+      "description": "Portable Bluetooth speaker with deep bass and water resistance.",
+      "category": "electronics",
+      "link": "products/product5.html"
+    },
+    {
+      "id": 6,
+      "name": "Backpack",
+      "price": 29.99,
+      "image": "assets/product6.jpeg",
+      "description": "Durable and stylish backpack with multiple compartments.",
+      "category": "fashion",
+      "link": "products/product6.html"
+    },
+    {
+      "id": 7,
+      "name": "Coffee Maker",
+      "price": 99.99,
+      "image": "assets/product7.jpeg",
+      "description": "Programmable coffee maker with built-in grinder and auto-brew.",
+      "category": "home",
+      "link": "products/product7.html"
+    },
+    {
+      "id": 8,
+      "name": "Wireless Keyboard",
+      "price": 49.99,
+      "image": "assets/product8.jpeg",
+      "description": "Ultra-slim wireless keyboard with long battery life.",
+      "category": "electronics",
+      "link": "products/product8.html"
+    }
+  ]
+  

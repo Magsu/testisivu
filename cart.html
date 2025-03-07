@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - E-Commerce Store</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="product-list.html">Shop</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="cart-page-container">
+        <h2>Your Cart</h2>
+        <div id="cart-page-items">No items in cart.</div>
+        <div class="cart-page-actions">
+            <button id="clear-cart-page">Clear Cart</button>
+            <a href="checkout.html" class="checkout-button">Proceed to Checkout</a>
+        </div>
+    </section>
+
+    <script>
+        const cartItemsContainer = document.getElementById("cart-page-items");
+
+        let cart = JSON.parse(sessionStorage.getItem("cart")) || [];
+        let products = JSON.parse(localStorage.getItem("products")) || [];
+
+        function displayCartItems() {
+
+            cart = JSON.parse(sessionStorage.getItem("cart")) || [];
+            cartItemsContainer.innerHTML = "";
+
+            if (cart.length === 0) {
+                cartItemsContainer.textContent = "No items in cart.";
+                return;
+            }
+
+            let total = 0;
+
+            cart.forEach(item => {
+                const product = products.find(p => p.id === item.id);
+                if (product) {
+                    total += product.price * item.quantity;
+
+                    const cartItem = document.createElement("div");
+                    cartItem.classList.add("cart-page-item");
+                    cartItem.innerHTML = `
+                <img src="${product.image}" alt="${product.name}" width="80">
+                <div>
+                  <h4>${product.name}</h4>
+                  <p>Price: $${product.price.toFixed(2)}</p>
+                  <p>Quantity: <span class="item-quantity" data-id="${item.id}">${item.quantity}</span></p>
+                  <div class="quantity-controls">
+                    <button class="increase-quantity" data-id="${item.id}">+</button>
+                    <button class="decrease-quantity" data-id="${item.id}">-</button>
+                    <button class="remove-item" data-id="${item.id}">Remove</button>
+                  </div>
+                </div>
+              `;
+                    cartItemsContainer.appendChild(cartItem);
+                }
+            });
+
+            const totalElement = document.createElement("p");
+            totalElement.style.fontWeight = "bold";
+            totalElement.textContent = `Cart Total: $${total.toFixed(2)}`;
+            cartItemsContainer.appendChild(totalElement);
+
+            addEventListeners();
+        }
+
+        function addEventListeners() {
+            document.querySelectorAll(".increase-quantity").forEach(button => {
+                button.addEventListener("click", function () {
+                    updateQuantity(parseInt(this.dataset.id), 1);
+                });
+            });
+
+            document.querySelectorAll(".decrease-quantity").forEach(button => {
+                button.addEventListener("click", function () {
+                    updateQuantity(parseInt(this.dataset.id), -1);
+                });
+            });
+
+            document.querySelectorAll(".remove-item").forEach(button => {
+                button.addEventListener("click", function () {
+                    removeItem(parseInt(this.dataset.id));
+                });
+            });
+        }
+
+        function updateQuantity(productId, change) {
+            cart = JSON.parse(sessionStorage.getItem("cart")) || [];
+            
+            const item = cart.find(i => i.id === productId);
+            if (item) {
+                item.quantity += change;
+
+                if (item.quantity <= 0) {
+                    cart = cart.filter(i => i.id !== productId);
+                }
+
+                sessionStorage.setItem("cart", JSON.stringify(cart));
+                displayCartItems();
+            }
+        }
+
+        function removeItem(productId) {
+            cart = JSON.parse(sessionStorage.getItem("cart")) || [];
+            cart = cart.filter(i => i.id !== productId);
+            sessionStorage.setItem("cart", JSON.stringify(cart));
+            displayCartItems();
+        }
+
+        displayCartItems();
+
+        let clearBtn = document.getElementById("clear-cart");
+        clearBtn.addEventListener("click", () => {
+            sessionStorage.clear();
+            console.log(sessionStorage)
+            displayCartItems();
+        })
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - E-Commerce Store</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="product-list.html">Shop</a></li>
+            </ul>
+        </nav>
+    </header>
+    <form>
+        <section class="checkout-container">
+            <h2>Checkout</h2>
+
+            <div class="checkout-section">
+                <h3>Billing & Shipping Information</h3>
+                <label for="name">Full Name:</label>
+                <input type="text" id="name" required>
+                
+                <label for="phone">Phone Number:</label>
+                <input type="tel" id="phone" required pattern="[0-9]{10,15}">
+
+                <label for="address">Street Address:</label>
+                <input type="text" id="address" required>
+
+                <label for="city">City:</label>
+                <input type="text" id="city" required>
+
+                <label for="country">Country:</label>
+                <input type="text" id="country" required>
+
+                <label for="zip">Zip Code:</label>
+                <input type="text" id="zip" required>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" required>
+            </div>
+
+            <div class="checkout-section">
+                <h3>Payment Method</h3>
+                <label for="payment-method">Select Payment Method:</label>
+                <select id="payment-method" required>
+                    <option value="">Select...</option>
+                    <option value="card">Credit/Debit Card</option>
+                    <option value="paypal">PayPal</option>
+                </select>
+            </div>
+
+            <div id="card-info" class="checkout-section hidden">
+                <h3>Card Information</h3>
+                <label for="card-number">Card Number:</label>
+                <input type="text" id="card-number">
+
+                <label for="expiry">Expiry Date:</label>
+                <input type="text" id="expiry">
+
+                <label for="cvv">CVV:</label>
+                <input type="text" id="cvv">
+            </div>
+
+            <div id="paypal-info" class="checkout-section hidden">
+                <p>Placing order continues to PayPal service.</p>
+            </div>
+
+            <div class="checkout-section cart-summary">
+                <h3>Order Summary</h3>
+                <div id="cart-summary">No items in cart.</div>
+            </div>
+
+            <button id="place-order" class="place-order">Place Order</button>
+        </section>
+    </form>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const cartSummary = document.getElementById("cart-summary");
+            const placeOrderButton = document.getElementById("place-order");
+            const paymentMethod = document.getElementById("payment-method");
+            const cardInfo = document.getElementById("card-info");
+            const paypalInfo = document.getElementById("paypal-info");
+            let cart = JSON.parse(sessionStorage.getItem("cart")) || [];
+            let products = JSON.parse(localStorage.getItem("products")) || [];
+
+            function displayCartSummary() {
+                cartSummary.innerHTML = "";
+                if (cart.length === 0) {
+                    cartSummary.textContent = "No items in cart.";
+                    return;
+                }
+
+                cart.forEach(item => {
+                    const product = products.find(p => p.id === item.id);
+                    if (product) {
+                        const itemElement = document.createElement("p");
+                        itemElement.textContent = `${product.name} - $${product.price.toFixed(2)} x ${item.quantity}`;
+                        cartSummary.appendChild(itemElement);
+                    }
+                });
+            }
+
+            paymentMethod.addEventListener("change", function () {
+                cardInfo.classList.add("hidden");
+                paypalInfo.classList.add("hidden");
+
+                if (this.value === "card") {
+                    cardInfo.classList.remove("hidden");
+                } else if (this.value === "paypal") {
+                    paypalInfo.classList.remove("hidden");
+                }
+            });
+
+            placeOrderButton.addEventListener("click", function (e) {
+                if (!document.querySelector("form").checkValidity()) {
+                    alert("Please fill in all required fields.");
+                    return;
+                }
+                alert("Order placed successfully!");
+                sessionStorage.removeItem("cart");
+                window.location.href = "index.html";
+            });
+
+            displayCartSummary();
+        });
+    </script>
+</body>
+
+</html>

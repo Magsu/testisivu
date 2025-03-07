@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Commerce Store</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="js/cart.js"></script>
+    <script src="js/search.js"></script>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="product-list.html">Shop</a></li>
+                <li><a href="#" id="cart-button">&#128722; <span id="cart-count">0</span></a></li>
+                <li>
+                    <div id="search-toggle">&#128269;</div>
+                    <div id="search-box" class="hidden">
+                        <input type="text" id="search-input" placeholder="Search products...">
+                        <button id="search-button">Search</button>
+
+                        <div id="search-results"></div>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="promo-banner">
+        <h2>Big Sale Event - Up to 50% Off!</h2>
+        <p>Shop now and take advantage of our biggest sale of the season.</p>
+        <button>Shop Now</button>
+    </section>
+
+    <section class="featured-products">
+        <h2>Featured Products</h2>
+        <div class="products-container">
+            <div class="product-card">
+                <a href="products/product1.html?id=1"><img src="assets/product1.jpeg"></a>
+                <a href="products/product1.html?id=1">
+                    <h3>Wireless Headphones</h3>
+                </a>
+                <a href="products/product1.html?id=1">
+                    <p>$59.99</p>
+                </a>
+            </div>
+            <div class="product-card">
+                <a href="products/product2.html?id=2"><img src="assets/product2.jpeg"></a>
+                <a href="products/product2.html?id=2">
+                    <h3>Smartphone Stand</h3>
+                </a>
+                <a href="products/product2.html?id=2">
+                    <p>$15.99</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <h3 class="carousel-h3">Our products</h3>
+    <section class="carousel">
+        <div class="prev">&nbsp;&#10094;&nbsp;</div>
+        <div class="carousel-track"></div>
+        <div class="next">&nbsp;&#10095;&nbsp;</div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 E-Commerce Store. All rights reserved.</p>
+    </footer>
+
+    <script>
+        Cart.initModal("cart-button");
+
+        //Search functionality
+        Search.initSearch("products/products.json")
+            .then(() => {
+                const searchButton = document.getElementById("search-button");
+                searchButton.addEventListener("click", () => {
+                    const query = document.getElementById("search-input").value;
+                    Search.searchAndDisplay(query, "search-results");
+                });
+            })
+
+            .catch(err => console.error("Error initializing search:", err));
+
+        const searchToggle = document.getElementById("search-toggle");
+        const searchBox = document.getElementById("search-box");
+
+        searchToggle.addEventListener("click", function () {
+            searchBox.classList.toggle("hidden");
+        });
+
+        const carouselTrack = document.querySelector(".carousel-track");
+
+        // Fetch products from localStorage or API
+        function getProducts() {
+            return JSON.parse(localStorage.getItem("products")) || [];
+        }
+
+        // Shuffle function for randomizing products
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Populate the carousel dynamically
+        function populateCarousel() {
+            let products = getProducts();
+            if (!products.length) return;
+
+            // Shuffle products for randomness
+            products = shuffleArray(products);
+
+            // Clear existing slides (if any)
+            carouselTrack.innerHTML = "";
+
+            // Add products to the carousel
+            products.forEach(product => {
+                const slide = document.createElement("div");
+                slide.classList.add("carousel-item");
+                slide.innerHTML = `
+            <img src="${product.image}" alt="${product.name}" style="width:100%; height:auto;">
+            <a href="${product.link}"><h3>${product.name}</h3></a>
+            <p>$${product.price.toFixed(2)}</p>
+        `;
+                carouselTrack.appendChild(slide);
+            });
+        }
+
+        populateCarousel(); // Run function to populate the carousel
+
+        // Keep existing carousel functionality
+        const prevButton = document.querySelector(".prev");
+        const nextButton = document.querySelector(".next");
+
+        function moveNextSlide() {
+            const firstSlide = carouselTrack.firstElementChild;
+            carouselTrack.appendChild(firstSlide);
+        }
+
+        function movePrevSlide() {
+            const lastSlide = carouselTrack.lastElementChild;
+            carouselTrack.prepend(lastSlide);
+        }
+
+        nextButton.addEventListener("click", moveNextSlide);
+        prevButton.addEventListener("click", movePrevSlide);
+        setInterval(moveNextSlide, 8000);
+    </script>
+</body>
+
+</html>
