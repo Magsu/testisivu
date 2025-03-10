@@ -74,7 +74,6 @@
     <script>
         Cart.initModal("cart-button");
 
-        //Search functionality
         Search.initSearch("products/products.json")
             .then(() => {
                 const searchButton = document.getElementById("search-button");
@@ -95,12 +94,6 @@
 
         const carouselTrack = document.querySelector(".carousel-track");
 
-        // Fetch products from localStorage or API
-        function getProducts() {
-            return JSON.parse(localStorage.getItem("products")) || [];
-        }
-
-        // Shuffle function for randomizing products
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -109,33 +102,36 @@
             return array;
         }
 
-        // Populate the carousel dynamically
-        function populateCarousel() {
-            let products = getProducts();
-            if (!products.length) return;
+        function waitForLocalStorage(key, cb, timer) {
+            if (!sessionStorage.getItem(key)) return (timer = setTimeout(waitForLocalStorage.bind(null, key, cb), 100))
+            clearTimeout(timer)
+            if (typeof cb !== 'function') return localStorage.getItem(key)
+            return cb(sessionStorage.getItem(key))
+        }
 
-            // Shuffle products for randomness
-            products = shuffleArray(products);
+        waitForLocalStorage("products",
+            function populateCarousel() {
 
-            // Clear existing slides (if any)
-            carouselTrack.innerHTML = "";
+                let products = JSON.parse(sessionStorage.getItem("products")) || [];
+                console.log(products)
+                if (!products.length) return;
 
-            // Add products to the carousel
-            products.forEach(product => {
-                const slide = document.createElement("div");
-                slide.classList.add("carousel-item");
-                slide.innerHTML = `
+                products = shuffleArray(products);
+
+                carouselTrack.innerHTML = "";
+
+                products.forEach(product => {
+                    const slide = document.createElement("div");
+                    slide.classList.add("carousel-item");
+                    slide.innerHTML = `
             <img src="${product.image}" alt="${product.name}" style="width:100%; height:auto;">
             <a href="${product.link}"><h3>${product.name}</h3></a>
             <p>$${product.price.toFixed(2)}</p>
         `;
-                carouselTrack.appendChild(slide);
+                    carouselTrack.appendChild(slide);
+                });
             });
-        }
 
-        populateCarousel(); // Run function to populate the carousel
-
-        // Keep existing carousel functionality
         const prevButton = document.querySelector(".prev");
         const nextButton = document.querySelector(".next");
 
